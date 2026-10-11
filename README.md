@@ -72,5 +72,8 @@ just dist         # static cross-compiled binaries (darwin arm64/amd64, linux, w
 just deb          # Debian 13 (amd64) package
 ```
 
+No binaries are published: build from a tag you have read, and validate the result
+against your own feeds. `SUPPORT.md` says why, and what support you can expect.
+
 Go 1.26, standard library only, `CGO_ENABLED=0` static binaries. macOS is the
 development platform; Windows 11 and Debian 13 Linux are deployment targets.
