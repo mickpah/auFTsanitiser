@@ -86,6 +86,10 @@ func parseOptions(args []string) (Options, error) {
 	if o.OutputEncoding != "utf8" && o.OutputEncoding != "latin1" {
 		return o, errors.New("invalid --output-encoding (utf8|latin1)")
 	}
+	// Latin-1 bytes are not UTF-8; encoding/json would rewrite them as U+FFFD.
+	if o.Format == "json" && o.OutputEncoding == "latin1" && !o.Base64Output {
+		return o, errors.New("--output-encoding latin1 with --format json requires --base64")
+	}
 	if o.LineBreak != "lf" && o.LineBreak != "cr" {
 		return o, errors.New("invalid --line-break (lf|cr)")
 	}

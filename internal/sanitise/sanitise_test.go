@@ -3,6 +3,7 @@ package sanitise
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func run(t *testing.T, in string) Result {
@@ -188,5 +189,26 @@ func TestSuperscriptExponents(t *testing.T) {
 		if got := run(t, in).Text; got != want {
 			t.Errorf("Sanitise(%q) = %q, want %q", in, got, want)
 		}
+	}
+}
+
+// Warning aggregation must stay linear: input with many distinct unmappable
+// codepoints used to scan the whole warning list per character (finding 6).
+func TestManyDistinctUnmappablesIsLinear(t *testing.T) {
+	const n = 300000
+	var sb strings.Builder
+	for i := 0; i < n; i++ {
+		sb.WriteRune(rune(0x40000 + i)) // planes 4-8 are unassigned: never mapped
+	}
+	start := time.Now()
+	res := run(t, sb.String())
+	if d := time.Since(start); d > 3*time.Second {
+		t.Fatalf("took %v for %d distinct unmappables", d, n)
+	}
+	if len(res.Warnings) != n || res.Warnings[0].Codepoint != 0x40000 || res.Warnings[n-1].Codepoint != 0x40000+n-1 {
+		t.Errorf("warnings %d, first %U last %U", len(res.Warnings), res.Warnings[0].Codepoint, res.Warnings[len(res.Warnings)-1].Codepoint)
+	}
+	if res.Unmappable != n {
+		t.Errorf("unmappable = %d", res.Unmappable)
 	}
 }

@@ -36,6 +36,7 @@ func TestUsageErrors(t *testing.T) {
 		{[]string{"-", "--charset", "big5"}, "invalid --charset (ascii|latin1)"},
 		{[]string{"-", "--line-break", "crlf"}, "invalid --line-break (lf|cr)"},
 		{[]string{"-", "--output-encoding", "utf16"}, "invalid --output-encoding (utf8|latin1)"},
+		{[]string{"-", "--format", "json", "--output-encoding", "latin1"}, "--output-encoding latin1 with --format json requires --base64"},
 		{[]string{"a.txt", "b.txt"}, "multiple input arguments"},
 		{[]string{}, "missing input (file path or - for stdin)"},
 	}
@@ -82,5 +83,18 @@ func TestUsageTextMatchesContract(t *testing.T) {
 	}
 	if !strings.Contains(out, "0 success; 1 conversion failure; 2 usage/input error") {
 		t.Error("usage text missing exit-code contract")
+	}
+}
+
+// Latin-1 bytes are not valid UTF-8, so they cannot travel inside a JSON string
+// (encoding/json would silently rewrite them as U+FFFD). The combination is only
+// legal with --base64, which wraps the bytes.
+func TestLatin1JSONRequiresBase64(t *testing.T) {
+	code, out, errs := runCLI(t, "caf\u00e9\n", "-", "--charset", "latin1", "--output-encoding", "latin1", "--format", "json", "--base64")
+	if code != 0 || errs != "" {
+		t.Fatalf("exit %d, stderr %q", code, errs)
+	}
+	if !strings.Contains(out, `"encoding":"base64"`) || !strings.Contains(out, "Y2Fm6Qo=") {
+		t.Errorf("envelope should carry base64 latin1 bytes: %s", out)
 	}
 }

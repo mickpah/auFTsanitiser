@@ -49,7 +49,9 @@ ISO 8859-1 printables 0xA0-0xFF through unsubstituted, except codepoints
 named in a **--table** override, which are substituted.
 
 **--output-encoding** *utf8*|*latin1*
-: Byte encoding of the output. Default *utf8*.
+: Byte encoding of the output. Default *utf8*. With **--format** *json*,
+*latin1* requires **--base64**, because Latin-1 bytes cannot be carried in
+a JSON string.
 
 **--line-break** *lf*|*cr*
 : Output line-break representation. Default *lf*.
@@ -91,11 +93,14 @@ invalid table is a usage error. See
 
 **1**
 : Conversion failure: undecodable input, an unmappable character under
-**--strict**, or an internal conformance-gate failure.
+**--strict**, an internal conformance-gate failure, or a recovered internal
+error (reported as `internal error: ...` without a stack trace).
 
 **2**
 : Usage or input error: unknown flag, missing input, unreadable input file,
-unwritable output, invalid base64, invalid **--table** file.
+input larger than 64 MiB, unwritable output, invalid base64, invalid
+**--table** file, or **--output-encoding** *latin1* with **--format** *json*
+and no **--base64**.
 
 On exit 1 or 2 no payload is produced and no partial **-o** file is left.
 

@@ -4,9 +4,11 @@ package cli
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 	"strings"
 
 	"auFTsanitiser/internal/decode"
@@ -38,8 +40,12 @@ options:
 exit codes: 0 success; 1 conversion failure; 2 usage/input error
 `
 
+// maxInput bounds stdin and file input (64 MiB): a runaway stream fails with
+// exit 2 instead of exhausting memory. Real reports are kilobytes.
+const maxInput = 64 << 20
+
 // Run executes the CLI and returns the process exit code.
-func Run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+func Run(args []string, stdin io.Reader, stdout, stderr io.Writer) (code int) {
 	opts, err := parseOptions(args)
 	if err != nil {
 		// Usage errors are text-mode regardless of --format json
@@ -55,28 +61,48 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 		fmt.Fprintln(stdout, "auFTsanitiser "+Version)
 		return 0
 	}
+	// A crash is a hard exit 1 in the selected format, never a stack trace
+	// with the usage-error code. The message carries no input (see
+	// internalErrorMessage).
+	defer func() {
+		if r := recover(); r != nil {
+			code = failWithCode(opts, internalErrorMessage(r), sanitise.Result{}, stdout, stderr, 1)
+		}
+	}()
+
+	// Input acquisition (FR-001). Input is drained before the --table is
+	// loaded so a caller piping a large report sees the table error, not a
+	// broken pipe.
+	var data []byte
+	if opts.InputPath == "-" {
+		data, err = readLimited(stdin)
+		if errors.Is(err, errTooLarge) {
+			return failWithCode(opts, "input exceeds 64 MiB", sanitise.Result{}, stdout, stderr, 2)
+		}
+		if err != nil {
+			return failWithCode(opts, "cannot read stdin", sanitise.Result{}, stdout, stderr, 2)
+		}
+	} else {
+		f, ferr := os.Open(opts.InputPath)
+		if ferr == nil {
+			data, err = readLimited(f)
+			f.Close()
+		}
+		if errors.Is(err, errTooLarge) {
+			return failWithCode(opts, "input exceeds 64 MiB", sanitise.Result{}, stdout, stderr, 2)
+		}
+		if ferr != nil || err != nil {
+			return failWithCode(opts, "cannot read input file", sanitise.Result{}, stdout, stderr, 2)
+		}
+	}
 
 	// Site override table (FR-011): validated at load; failures are usage
-	// errors before any input is read.
+	// errors.
 	var overrides map[rune]string
 	if opts.TablePath != "" {
 		overrides, err = table.LoadOverrides(opts.TablePath)
 		if err != nil {
 			return failWithCode(opts, err.Error(), sanitise.Result{}, stdout, stderr, 2)
-		}
-	}
-
-	// Input acquisition (FR-001).
-	var data []byte
-	if opts.InputPath == "-" {
-		data, err = io.ReadAll(stdin)
-		if err != nil {
-			return failWithCode(opts, "cannot read stdin", sanitise.Result{}, stdout, stderr, 2)
-		}
-	} else {
-		data, err = os.ReadFile(opts.InputPath)
-		if err != nil {
-			return failWithCode(opts, "cannot read input file", sanitise.Result{}, stdout, stderr, 2)
 		}
 	}
 
@@ -115,4 +141,28 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	}
 
 	return emit(opts, res, stdout, stderr)
+}
+
+var errTooLarge = errors.New("input too large")
+
+// readLimited reads at most maxInput bytes; one byte more is errTooLarge.
+func readLimited(r io.Reader) ([]byte, error) {
+	data, err := io.ReadAll(io.LimitReader(r, maxInput+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxInput {
+		return nil, errTooLarge
+	}
+	return data, nil
+}
+
+// internalErrorMessage renders a recovered panic without input text: a Go
+// runtime error names only indices and lengths, so its message is kept; any
+// other value (a string, an error built from data) is reduced to its type.
+func internalErrorMessage(r interface{}) string {
+	if err, ok := r.(runtime.Error); ok {
+		return "internal error: " + err.Error()
+	}
+	return fmt.Sprintf("internal error: %T", r)
 }

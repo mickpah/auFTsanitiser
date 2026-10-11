@@ -42,6 +42,12 @@ type Result struct {
 	Substituted int
 	Unmappable  int
 	Warnings    []Warning
+	index       map[warnKey]int // position in Warnings, so aggregation stays linear
+}
+
+type warnKey struct {
+	cat Category
+	cp  rune
 }
 
 // Modified reports whether any character-level correction was applied to the
@@ -63,11 +69,13 @@ func (res Result) Modified() bool {
 // addWarning aggregates by (category, codepoint), preserving first-occurrence
 // order for determinism (NFR-002).
 func (res *Result) addWarning(cat Category, cp rune) {
-	for i := range res.Warnings {
-		if res.Warnings[i].Category == cat && res.Warnings[i].Codepoint == cp {
-			res.Warnings[i].Count++
-			return
-		}
+	if i, ok := res.index[warnKey{cat, cp}]; ok {
+		res.Warnings[i].Count++
+		return
 	}
+	if res.index == nil {
+		res.index = map[warnKey]int{}
+	}
+	res.index[warnKey{cat, cp}] = len(res.Warnings)
 	res.Warnings = append(res.Warnings, Warning{Codepoint: cp, Count: 1, Category: cat})
 }
