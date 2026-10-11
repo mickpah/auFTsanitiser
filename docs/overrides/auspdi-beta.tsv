@@ -1,0 +1,4 @@
+# Site override for AUSPDI ORU feeds where U+00DF is used as beta
+# (T044 decision, specs/001-auftsanitiser/research.md R10).
+# Usage: auFTsanitiser report.txt --table docs/overrides/auspdi-beta.tsv
+U+00DF	beta

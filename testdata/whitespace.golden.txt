@@ -1,0 +1,3 @@
+A B narrow C
+zerowidth joiner njx bomend
+softhyphen

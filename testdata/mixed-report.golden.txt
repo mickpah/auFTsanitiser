@@ -1,0 +1,6 @@
+37.5 deg C, ug/L, beta-hCG, 5-10 mm, "normal", m2, +/-2
+Findings  are  stable.
+No change->stable
+Tab here
+zerowidth end
+Dose 40 deg C unchanged

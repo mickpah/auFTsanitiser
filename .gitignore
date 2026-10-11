@@ -1,0 +1,33 @@
+# Build artifacts
+/auFTsanitiser
+/auFTsanitiser.exe
+/dist/
+*.exe
+*.test
+*.out
+.claude
+.specify
+CLAUDE.md
+
+# Site deployment material, design specs, review notes, standards documents: never public.
+/private/
+
+# OS / editor
+.DS_Store
+.idea/
+
+# Patient data (PHI) — local validation corpus, never committed (constitution Principle V).
+# The real-report tests run over this when present and skip when absent.
+/Sample_reports/
+/sample_txt/
+# Sanitised output of the real reports (contains the same PHI as the source).
+/sample_reports_out/
+# One-off debug captures of real messages/reports (PHI).
+/issue*/
+/failed*.txt
+/deployment/tests/rhino/rhino-*.jar
+
+# Release binaries (recovered/archived artifacts); SHA256SUMS is tracked.
+/releases/*/auFTsanitiser-*
+/releases/*/*.deb
+__pycache__/
