@@ -100,7 +100,8 @@ Both scripts have `--self-test`.
 
 ## Licence
 
-Apache License 2.0 is the intended licence; the `LICENSE` file is added at the
-public release with the copyright holder named. Until then all rights are reserved.
-The licence's warranty and liability clauses apply to source and built forms alike;
-the clinical-use limits in `SUPPORT.md` and `docs/tga-compliance.md` apply regardless.
+Copyright 2026 Michael Paholski. Licensed under the Apache License, Version 2.0; see
+[`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). The licence's warranty disclaimer
+(section 7) and limitation of liability (section 8) apply to source and built forms
+alike; the clinical-use limits in `SUPPORT.md` and `docs/tga-compliance.md` apply
+regardless of licence.
