@@ -73,6 +73,36 @@ Internals for developers: [`docs/architecture.md`](docs/architecture.md).
 Exit codes: 0 success; 1 conversion failure; 2 usage/input error. Diagnostics
 go to stderr only and never contain report text (codepoints and counts only).
 
+## Why Go
+
+A personal choice, but one that lines up well with what this tool has to be.
+
+- **One static binary, no dependencies.** `CGO_ENABLED=0` and the standard library
+  only. The deploy step is copying a file next to Mirth and pointing a symlink at it.
+  There is no runtime, no package manager, no shared library and no supply chain to
+  audit beyond the Go toolchain itself, which matters when the thing runs inside a
+  clinical pipeline that someone else has to sign off.
+- **Cross-platform without effort.** The same source builds for Linux, macOS and
+  Windows from one machine (`just dist`), and the golden parity suite proves the
+  output is byte-identical on each. Development happens on a Mac, production is
+  Debian, and nothing has to be ported.
+- **The standard library already has everything needed.** Unicode handling, JSON,
+  base64, atomic file renames, fuzzing and benchmarks all ship with the language, so
+  the whole program is a few small packages that one person can hold in their head
+  and a reviewer can read in an afternoon.
+- **Fast to start.** The tool is spawned once per report. A Go binary starts in a
+  couple of milliseconds, so one process per call stays simpler than a resident
+  service and costs nothing anyone can measure.
+- **Deterministic by construction.** The substitution and fold tables are static Go
+  source, not runtime Unicode data, so output cannot drift with a library or OS
+  update. Same input, same flags, same bytes, anywhere.
+- **Reproducible builds.** `-trimpath` and stripped symbols give the same binary from
+  the same tag on any machine, which is what a site needs when it builds from source
+  rather than downloading a release.
+- **Familiar shape.** It mirrors the sibling `rfttoVisage` converter, so the CLI
+  contract, test tiers and packaging were already proven and did not need
+  reinventing.
+
 ## Build
 
 ```bash
