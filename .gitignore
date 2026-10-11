@@ -29,7 +29,4 @@ CLAUDE.md
 /failed*.txt
 /deployment/tests/rhino/rhino-*.jar
 
-# Release binaries (recovered/archived artifacts); SHA256SUMS is tracked.
-/releases/*/auFTsanitiser-*
-/releases/*/*.deb
 __pycache__/
