@@ -1,5 +1,11 @@
 # Plain-Text Report Sanitiser for Australian HL7 v2.4 Messaging
 
+This public copy carries the normative substitution table (PRD section 7) and the
+references. The full product requirements document, with its functional requirements,
+open-question log and task ledger, is kept outside the repository. Every row below is
+enforced by a golden fixture in `testdata/`; a change to a row is a change to the
+product and needs a test first, a clinical reason in the commit, and a changelog entry.
+
 ### Whitespace and invisible
 
 | Input | Codepoint | Replacement |

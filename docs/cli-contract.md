@@ -1,6 +1,6 @@
 # Contract: auFTsanitiser CLI
 
-**Status**: v1 target (shared operational shape with `rfttoVisage`). Breaking changes require a spec revision.
+**Status**: v1, shipped in 0.1.0 and hardened 2026-10-11 (recovered-panic exit, input cap, latin1/json rule). Shared operational shape with `rfttoVisage`. Breaking changes require a spec revision and a MAJOR (or, in 0.x, MINOR) version bump.
 
 ## Synopsis
 

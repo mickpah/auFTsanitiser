@@ -13,16 +13,26 @@ message is constructed. Examples: `37.5 deg C` from `37.5°C`, `ug/L` from
 `µg/L`, `beta-hCG` from `β-hCG`, `+/-2` from `±2`, straight quotes from smart
 quotes.
 
-**Status: implemented.** Conversion, encoding detection, the HL7 escaper, the
-JSON envelope, atomic writes, and site overrides are complete and covered by
-unit, golden, corpus, fuzz, and benchmark tests (`just check` is the CI gate).
-The authoritative product requirements are in
-[`docs/prd-auFTsanitiser.md`](docs/prd-auFTsanitiser.md); the project mirrors the CLI
-contract, constitution, packaging, and test tiers of its sibling utility
-`rfttoVisage`. For channel-side wiring see
-[`docs/mirth-integration.md`](docs/mirth-integration.md). Site deployment material
-(channel export, environments, runbooks, real-message corpora) is kept outside this
-repository in the gitignored `private/` folder.
+**Status: implemented.** Conversion, encoding
+detection, the HL7 escaper, the JSON envelope, atomic writes and site overrides are
+complete and covered by unit, golden, corpus, PHI-leak, fuzz and benchmark tests
+(`just check` is the gate). The project mirrors the CLI contract, constitution,
+packaging and test tiers of its sibling utility `rfttoVisage`. Site deployment
+material (channel export, environments, runbooks, real-message corpora) is kept
+outside this repository in the gitignored `private/` folder.
+
+## Documents
+
+| Document | What it holds |
+|---|---|
+| [`docs/prd-auFTsanitiser.md`](docs/prd-auFTsanitiser.md) | the substitution table: every codepoint and its rendering |
+| [`docs/cli-contract.md`](docs/cli-contract.md) | streams, exit codes, JSON envelope (normative) |
+| [`docs/substitution-table-format.md`](docs/substitution-table-format.md) | the `--table` override file format |
+| [`docs/auFTsanitiser.1.md`](docs/auFTsanitiser.1.md) | man page |
+| [`docs/architecture.md`](docs/architecture.md) | pipeline, packages, invariants, design decisions, test tiers |
+| [`docs/mirth-integration.md`](docs/mirth-integration.md) | calling the tool from a Mirth channel, with full error handling |
+| [`docs/tga-compliance.md`](docs/tga-compliance.md) | why it is not a medical device, and what would change that |
+| [`SUPPORT.md`](SUPPORT.md), [`SECURITY.md`](SECURITY.md), [`CHANGELOG.md`](CHANGELOG.md) | support policy, vulnerability reporting, change history |
 
 ## Intended purpose
 
@@ -76,4 +86,21 @@ No binaries are published: build from a tag you have read, and validate the resu
 against your own feeds. `SUPPORT.md` says why, and what support you can expect.
 
 Go 1.26, standard library only, `CGO_ENABLED=0` static binaries. macOS is the
-development platform; Windows 11 and Debian 13 Linux are deployment targets.
+development platform; Debian 13 Linux is the deployment target and Windows builds
+are parity-tested only.
+
+## Working with real messages
+
+Real reports never enter the repository. `scripts/anonymise-hl7.py` turns a
+directory of HL7 messages into deterministic synthetic fixtures (names, ids, dates,
+practices and organisation names replaced; same input, same output), and
+`scripts/scan-for-phi.py` fails `just check` if any tracked fixture or document
+carries a PHI-shaped identifier, an un-anonymised HL7 person field or a titled name.
+Both scripts have `--self-test`.
+
+## Licence
+
+Apache License 2.0 is the intended licence; the `LICENSE` file is added at the
+public release with the copyright holder named. Until then all rights are reserved.
+The licence's warranty and liability clauses apply to source and built forms alike;
+the clinical-use limits in `SUPPORT.md` and `docs/tga-compliance.md` apply regardless.
