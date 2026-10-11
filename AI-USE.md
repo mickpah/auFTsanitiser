@@ -1,6 +1,6 @@
 # Use of AI in this project
 
-AI assistants were used in developing this project: for drafting code, tests and
+AI assistants were used in developing this project: for drafting tests and
 documents, for reviewing changes, and for research. 
 
 What that does and does not mean:
