@@ -5,9 +5,34 @@
 *.exe
 *.test
 *.out
-.claude
-.specify
+
+# AI assistant and coding-agent files: never part of the repository (see AI-USE.md).
+.claude/
+.claude*
 CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+GEMINI.md
+.gemini/
+.codex/
+.cursor/
+.cursorrules
+.cursorignore
+.aider*
+.copilot/
+.github/copilot-instructions.md
+.clinerules*
+.roo/
+.roomodes
+.windsurf/
+.windsurfrules
+.continue/
+.kiro/
+.agents/
+.specify/
+.specify*
+*.mcp.json
+.mcp.json
 
 # Site deployment material, design specs, review notes, standards documents: never public.
 /private/
