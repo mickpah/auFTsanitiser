@@ -31,7 +31,7 @@ outside this repository in the gitignored `private/` folder.
 | [`docs/architecture.md`](docs/architecture.md) | pipeline, packages, invariants, design decisions, test tiers |
 | [`docs/mirth-integration.md`](docs/mirth-integration.md) | calling the tool from a Mirth channel, with full error handling |
 | [`docs/tga-compliance.md`](docs/tga-compliance.md) | why it is not a medical device, and what would change that |
-| [`SUPPORT.md`](SUPPORT.md), [`SECURITY.md`](SECURITY.md), [`CHANGELOG.md`](CHANGELOG.md) | support policy, vulnerability reporting, change history |
+| [`SUPPORT.md`](SUPPORT.md), [`SECURITY.md`](SECURITY.md), [`CHANGELOG.md`](CHANGELOG.md), [`AI-USE.md`](AI-USE.md) | support policy, vulnerability reporting, change history, use of AI |
 
 ## Intended purpose
 

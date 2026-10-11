@@ -1,8 +1,7 @@
 # Use of AI in this project
 
-AI assistants were used in developing this project: for drafting code, tests and
-documents, for reviewing changes, and for research. The tools are not named and the
-extent is not itemised.
+AI assistants were used in developing this project: for reviewing code, tests and
+documents, for reviewing changes, and for research. 
 
 What that does and does not mean:
 
