@@ -24,6 +24,17 @@ contract, constitution, packaging, and test tiers of its sibling utility
 (channel export, environments, runbooks, real-message corpora) is kept outside this
 repository in the gitignored `private/` folder.
 
+## Intended purpose
+
+auFTsanitiser is interface middleware. Its sole purpose is to render a report's
+characters into the set the Australian HL7 v2.4 localisation permits so the message
+can be transmitted and accepted. It does not read, interpret, score or alter the
+clinical content of a report, makes no claim about any disease or condition, and
+controls no device. On that basis it is not a medical device under section 41BD of
+the Therapeutic Goods Act 1989 and falls within the middleware and communications
+software exclusions; see [`docs/tga-compliance.md`](docs/tga-compliance.md) for the
+assessment and the changes that would reopen it.
+
 ## Usage (see PRD sections 5 and 7)
 
 ```bash
