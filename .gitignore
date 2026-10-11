@@ -22,6 +22,8 @@ CLAUDE.md
 /sample_txt/
 # Sanitised output of the real reports (contains the same PHI as the source).
 /sample_reports_out/
+# Anonymised corpus generated locally by scripts/anonymise-hl7.py: test files, not committed.
+/Sample_reports_anon/
 # One-off debug captures of real messages/reports (PHI).
 /issue*/
 /failed*.txt
