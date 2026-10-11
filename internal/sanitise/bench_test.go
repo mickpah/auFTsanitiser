@@ -56,6 +56,9 @@ func TestPerformanceBudget(t *testing.T) {
 	if testing.Short() {
 		t.Skip("performance budget skipped in -short")
 	}
+	if raceEnabled {
+		t.Skip("performance budget skipped under the race detector")
+	}
 	for name, in := range map[string]string{"mixed": mixedMB(), "clean": cleanMB()} {
 		times := make([]time.Duration, 0, 5)
 		for i := 0; i < 5; i++ {
