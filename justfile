@@ -1,6 +1,5 @@
 # justfile for auFTsanitiser - plain-text report sanitiser for AU HL7 v2.4 messaging.
 # Run `just` or `just --list` to see available recipes.
-# Adapted from the rfttoVisage justfile.
 
 # Binary and module settings
 binary := "auFTsanitiser"

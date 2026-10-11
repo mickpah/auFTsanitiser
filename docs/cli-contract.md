@@ -1,6 +1,6 @@
 # Contract: auFTsanitiser CLI
 
-**Status**: v1 (0.1.0). Shared operational shape with `rfttoVisage`. Breaking changes require a spec revision and a MAJOR (or, in 0.x, MINOR) version bump.
+**Status**: v1 (0.1.0). Breaking changes require a spec revision and a MAJOR (or, in 0.x, MINOR) version bump.
 
 ## Synopsis
 

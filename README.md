@@ -16,8 +16,7 @@ quotes.
 **Status: implemented.** Conversion, encoding
 detection, the HL7 escaper, the JSON envelope, atomic writes and site overrides are
 complete and covered by unit, golden, corpus, PHI-leak, fuzz and benchmark tests
-(`just check` is the gate). The project mirrors the CLI contract, constitution,
-packaging and test tiers of its sibling utility `rfttoVisage`. Site deployment
+(`just check` is the gate). Site deployment
 material (channel export, environments, runbooks, real-message corpora) is kept
 outside this repository in the gitignored `private/` folder.
 
@@ -99,9 +98,6 @@ A personal choice, but one that lines up well with what this tool has to be.
 - **Reproducible builds.** `-trimpath` and stripped symbols give the same binary from
   the same tag on any machine, which is what a site needs when it builds from source
   rather than downloading a release.
-- **Familiar shape.** It mirrors the sibling `rfttoVisage` converter, so the CLI
-  contract, test tiers and packaging were already proven and did not need
-  reinventing.
 
 ## Build
 

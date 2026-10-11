@@ -1,7 +1,7 @@
 # Architecture
 
 Single static Go binary, standard library only. One pipeline, one output
-gate. Mirrors the sibling `rfttoVisage` converter.
+gate.
 
 ## Pipeline
 
