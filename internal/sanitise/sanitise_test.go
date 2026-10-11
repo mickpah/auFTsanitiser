@@ -166,3 +166,27 @@ func TestSupplementaryCombiningMarksDropped(t *testing.T) {
 		t.Errorf("got %q unmappable=%d", res.Text, res.Unmappable)
 	}
 }
+
+// AU localisation 4.10 (SPIA units): superscripts must not appear in units and
+// a power of ten is written 10^12. FR-012 forbids the caret, so a superscript
+// run after a base of 10 becomes the x10E9/L convention; any other numeric base
+// gets "exp"; after a unit letter the UCUM form (m2, L-1) is kept.
+func TestSuperscriptExponents(t *testing.T) {
+	cases := map[string]string{
+		"6.1×10¹²/L":       "6.1x10E12/L",
+		"4.5x10⁹/L":        "4.5x10E9/L",
+		"10⁻⁶ mol":         "10E-6 mol",
+		"1.73m² and cm³":   "1.73m2 and cm3",
+		"mmol L⁻¹":         "mmol L-1",
+		"2³ = 8":           "2exp3 = 8",
+		"Ca²⁺ Cl⁻":         "Ca2+ Cl-",
+		"x⁰ y⁴⁵⁶⁷⁸⁹ zⁱ wⁿ": "x0 y456789 zi wn",
+		"e⁼ ⁽a⁾ ₊₋₌₍₎ H₂O": "e= (a) +-=() H2O",
+		"10 ⁹":             "10 9",
+	}
+	for in, want := range cases {
+		if got := run(t, in).Text; got != want {
+			t.Errorf("Sanitise(%q) = %q, want %q", in, got, want)
+		}
+	}
+}

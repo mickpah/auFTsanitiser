@@ -70,6 +70,12 @@ func Sanitise(text string, opts Options) (Result, error) {
 			continue
 		}
 
+		// AU 4.10: a superscript run after a number is an exponent (10^12).
+		// FR-012 forbids the caret, so write the x10E9/L convention.
+		if i == 0 || !isSuperscript(src[i-1]) {
+			b.WriteString(exponentMarker(b.String(), r))
+		}
+
 		// Explicit substitution table, site overrides first (FR-011).
 		rep, ok := "", false
 		if opts.Overrides != nil {
@@ -136,4 +142,30 @@ func Sanitise(text string, opts Options) (Result, error) {
 
 	res.Text = b.String()
 	return res, nil
+}
+
+func isSuperscript(r rune) bool {
+	return r == 0xB9 || r == 0xB2 || r == 0xB3 || (r >= 0x2070 && r <= 0x207F)
+}
+
+func isSuperscriptDigit(r rune) bool {
+	return r == 0xB9 || r == 0xB2 || r == 0xB3 || r == 0x2070 || (r >= 0x2074 && r <= 0x2079)
+}
+
+// exponentMarker is the delimiter-free "raised to" marker emitted before a
+// superscript run that starts with a digit or minus and follows a number:
+// "E" after a base of exactly 10 (6.1x10E12/L), "exp" after any other base
+// (2exp3). Empty after a unit letter, so m2 and L-1 keep the UCUM form.
+func exponentMarker(out string, r rune) string {
+	if !isSuperscriptDigit(r) && r != 0x207B {
+		return ""
+	}
+	n := len(out)
+	if n == 0 || out[n-1] < '0' || out[n-1] > '9' {
+		return ""
+	}
+	if strings.HasSuffix(out, "10") && (n == 2 || out[n-3] < '0' || out[n-3] > '9') {
+		return "E"
+	}
+	return "exp"
 }

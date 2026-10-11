@@ -159,6 +159,21 @@ func TestPRDEntries(t *testing.T) {
 	}
 }
 
+func TestSuperscriptAndSubscriptEntriesComplete(t *testing.T) {
+	// AU 4.10: superscripts and subscripts must not be used in units, so every
+	// superscript/subscript digit and sign maps to its plain form.
+	want := map[rune]string{
+		0x2070: "0", 0x2071: "i", 0x2074: "4", 0x2075: "5", 0x2076: "6", 0x2077: "7", 0x2078: "8", 0x2079: "9",
+		0x207A: "+", 0x207B: "-", 0x207C: "=", 0x207D: "(", 0x207E: ")",
+		0x208A: "+", 0x208B: "-", 0x208C: "=", 0x208D: "(", 0x208E: ")",
+	}
+	for r, rep := range want {
+		if got, ok := Lookup(r); !ok || got != rep {
+			t.Errorf("U+%04X: got %q,%v want %q", r, got, ok, rep)
+		}
+	}
+}
+
 func TestSpaceWrappedEntries(t *testing.T) {
 	for _, r := range []rune{0x00B0, 0x2103, 0x2109} {
 		if !SpaceWrapped(r) {

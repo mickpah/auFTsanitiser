@@ -36,8 +36,8 @@
 | Not equal | U+2260 | `not =` |
 | Almost equal | U+2248 | `approx.` |
 | Per mille | U+2030 | `per 1000` |
-| Superscript 1, 2, 3, n | U+00B9, U+00B2, U+00B3, U+207F | `1`, `2`, `3`, `n` (so `m²` -> `m2`, `cm³` -> `cm3`) |
-| Subscript digits | U+2080–U+2089 | plain digit |
+| Superscript digits, signs, i, n | U+00B9, U+00B2, U+00B3, U+2070–U+207F | plain digit or sign (so `m²` -> `m2`, `cm³` -> `cm3`, `L⁻¹` -> `L-1`). A superscript run after a number is an exponent (AU 4.10 `10^12`); FR-012 forbids the caret, so a base of 10 takes the `x10E9/L` convention (`6.1×10¹²/L` -> `6.1x10E12/L`, `10⁻⁶` -> `10E-6`) and any other base takes `exp` (`2³` -> `2exp3`) |
+| Subscript digits and signs | U+2080–U+208E | plain digit or sign |
 | Vulgar fractions | U+00BD, U+00BC, U+00BE, U+2153, U+2154, U+215B–U+215E | `1/2`, `1/4`, `3/4`, `1/3`, `2/3`, `1/8`, `3/8`, `5/8`, `7/8` |
 | Numero sign | U+2116 | `No.` |
 | Arrows left/right/up/down | U+2190, U+2192, U+2191, U+2193 | `<-`, `->`, `increased`, `decreased` |

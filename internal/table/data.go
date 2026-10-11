@@ -63,7 +63,25 @@ var substitutions = map[rune]string{
 	0x00B2: "2",        // superscript two
 	0x00B3: "3",        // superscript three
 	0x207F: "n",        // superscript n
-	0x2080: "0",        // subscript digits
+	0x2070: "0",        // remaining superscript digits and signs (AU 4.10: no superscripts in units)
+	0x2071: "i",
+	0x2074: "4",
+	0x2075: "5",
+	0x2076: "6",
+	0x2077: "7",
+	0x2078: "8",
+	0x2079: "9",
+	0x207A: "+",
+	0x207B: "-",
+	0x207C: "=",
+	0x207D: "(",
+	0x207E: ")",
+	0x208A: "+", // subscript signs
+	0x208B: "-",
+	0x208C: "=",
+	0x208D: "(",
+	0x208E: ")",
+	0x2080: "0", // subscript digits
 	0x2081: "1",
 	0x2082: "2",
 	0x2083: "3",
